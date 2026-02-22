@@ -33,11 +33,20 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y \
   --option APT::Immediate-Configure=false \
-  sudo vim clang lld ccache cmake wget \
+  sudo vim clang g++ lld ccache cmake wget \
   ninja-build python3 openjdk-21-jdk \
   graphviz git curl gzip libreadline-dev \
-  libboost-all-dev pkg-config python3-venv  \
-  ghdl verilator
+  libboost-all-dev pkg-config python3-venv \
+  flex bison autoconf help2man
+
+RUN git clone https://github.com/verilator/verilator --depth 1 \
+  && cd verilator \
+  && git fetch --depth=1 origin tag v5.044 \
+  && git checkout v5.044 \
+  && autoconf \
+  && ./configure \
+  && make -j10 \
+  && make install
 # [END Installing the dependency]
 
 # The user does not need a password to run sudo
